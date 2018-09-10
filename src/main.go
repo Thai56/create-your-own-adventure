@@ -1,34 +1,20 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
+	"./jsonParser"
+	s "./structs"
 	"github.com/gorilla/mux"
 )
 
-type OptionType struct {
-	Text string
-	Arc  string
-}
-
-type Story struct {
-	Title   string
-	Story   []string
-	Options []OptionType
-}
-
-//TODO: refactor server and json helpers into different files
 func main() {
-	var stories map[string]Story
+	var stories map[string]s.Story
 	gotStories := make(chan bool)
 
-	go getJson(&stories, gotStories)
+	go jsonParser.GetJson(&stories, gotStories)
 	<-gotStories
 
 	startingPoint := "intro"
@@ -36,6 +22,7 @@ func main() {
 
 	tmpl := template.Must(template.ParseFiles("src/index.html"))
 
+	//TODO: refactor server into different file
 	r := mux.NewRouter()
 	s := r.PathPrefix("/").Subrouter()
 
@@ -49,6 +36,7 @@ func main() {
 		vars := mux.Vars(r)
 		category := vars["arc"]
 
+		//TODO: add error handling to this in case the category is not found in stories
 		data := stories[category]
 		tmpl.Execute(w, data)
 	})
@@ -57,20 +45,4 @@ func main() {
 	if err != nil {
 		log.Fatal("Listen and Serve: ", err)
 	}
-}
-
-func getJson(stories *map[string]Story, finished chan bool) {
-	pwd, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("Problem getting working directory: %v\n", err)
-	}
-
-	jsonUnparsed, err := ioutil.ReadFile(pwd + "/gopher.json")
-	if err != nil {
-		fmt.Printf("There was a problem reading the file: %v \n", err)
-	}
-
-	json.Unmarshal(jsonUnparsed, stories)
-
-	finished <- true
 }

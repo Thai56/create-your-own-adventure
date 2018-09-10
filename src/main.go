@@ -23,6 +23,7 @@ type Story struct {
 	Options []OptionType
 }
 
+//TODO: refactor server and json helpers into different files
 func main() {
 	var stories map[string]Story
 	gotStories := make(chan bool)
@@ -43,28 +44,19 @@ func main() {
 		tmpl.Execute(w, data)
 	})
 
+	//TODO: Work on adding styling to the HTML template
 	s.HandleFunc("/{arc}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		category := vars["arc"]
-		fmt.Println("category", category)
 
 		data := stories[category]
 		tmpl.Execute(w, data)
 	})
 
-	//s.Path("/{key}/").
-	//HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	//vars := mux.Vars(r)
-	//category := vars["key"]
-	//fmt.Println("category", category)
-	//fmt.Println("reaching here")
-	//})
-
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatal("Listen and Serve: ", err)
 	}
-	//TODO: work on putting story as html on browser
 }
 
 func getJson(stories *map[string]Story, finished chan bool) {

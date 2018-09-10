@@ -20,7 +20,7 @@ func main() {
 	startingPoint := "intro"
 	currentStory := stories[startingPoint]
 
-	tmpl := template.Must(template.ParseFiles("src/index.html"))
+	tmpl := template.Must(template.ParseFiles("src/templates/index.html"))
 
 	//TODO: refactor server into different file
 	r := mux.NewRouter()

@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
-	//"html/template"
 	"encoding/json"
+	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	//"path/filepath"
+
+	"github.com/gorilla/mux"
 )
 
 type OptionType struct {
@@ -18,13 +19,8 @@ type OptionType struct {
 
 type Story struct {
 	Title   string
-	Story   string
+	Story   []string
 	Options []OptionType
-}
-
-func sayHello(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Hello World!!!")
-	w.Write([]byte("Hello World!!!"))
 }
 
 func main() {
@@ -37,11 +33,34 @@ func main() {
 	startingPoint := "intro"
 	currentStory := stories[startingPoint]
 
-	fmt.Println("Current Story ", currentStory)
-	//TODO: Set up basic web server
-	http.HandleFunc("/", sayHello)
+	tmpl := template.Must(template.ParseFiles("src/index.html"))
 
-	err := http.ListenAndServe(":8080", nil)
+	r := mux.NewRouter()
+	s := r.PathPrefix("/").Subrouter()
+
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		data := currentStory
+		tmpl.Execute(w, data)
+	})
+
+	s.HandleFunc("/{arc}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		category := vars["arc"]
+		fmt.Println("category", category)
+
+		data := stories[category]
+		tmpl.Execute(w, data)
+	})
+
+	//s.Path("/{key}/").
+	//HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//vars := mux.Vars(r)
+	//category := vars["key"]
+	//fmt.Println("category", category)
+	//fmt.Println("reaching here")
+	//})
+
+	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatal("Listen and Serve: ", err)
 	}

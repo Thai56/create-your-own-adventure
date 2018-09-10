@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+    <div>
+      <h1>{{.Title}}</h1>
+
+      <div>
+        {{range .Story}}
+        <p>{{.}}</p>
+        {{end}}
+      </div>
+
+      <ul>
+        {{range .Options}}
+        <li>
+          <a href="{{.Arc}}">
+            {{.Text}}
+          </a>
+        </li>
+        {{end}}
+      </ul>
+    </div>
+  </body>
+</html>

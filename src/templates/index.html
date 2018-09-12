@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
     <title>Choose Your Adventure</title>
+    <!--<link rel="stylesheet" type="text/css" href="../styles/main.css">-->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet">
+    <style>
+      body {
+        margin-bottom: 50px;
+      }
+      h1   {color: blue;}
+      p    {color: red;}
+      li {
+        margin-bottom: 10px;
+      }
+      .page {
+        width: 80%;
+        margin: auto;
+        max-width: 500px;
+        margin-top: 40px;
+        padding: 80px;
+        background-color: powderblue;
+      }
+      .shadow {
+        -moz-box-shadow:    3px 3px 5px 6px #ccc;
+        -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+        box-shadow:         3px 3px 5px 6px #ccc;
+      }
+      ul {
+        border-top: 1px dotted grey;
+        padding: 10px 0 0 0;
+      }
+</style>
   </head>
   <body>
-    <div>
+    <div class="page shadow">
       <h1>{{.Title}}</h1>
 
       <div>
@@ -14,15 +43,17 @@
         {{end}}
       </div>
 
-      <ul>
-        {{range .Options}}
-        <li>
-          <a href="{{.Arc}}">
-            {{.Text}}
-          </a>
-        </li>
-        {{end}}
-      </ul>
+      <div class="text-center">
+        <ul>
+          {{range .Options}}
+          <li>
+            <a href="{{.Arc}}">
+              {{.Text}}
+            </a>
+          </li>
+          {{end}}
+        </ul> 
+      <div>
     </div>
   </body>
 </html>

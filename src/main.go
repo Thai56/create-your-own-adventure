@@ -7,6 +7,7 @@ import (
 
 	"./jsonParser"
 	s "./structs"
+	//"fmt"
 	"github.com/gorilla/mux"
 )
 
@@ -46,3 +47,9 @@ func main() {
 		log.Fatal("Listen and Serve: ", err)
 	}
 }
+
+/*
+ *TODO: Refactor the server for this using server as struct and extending methods from it
+ *
+ *https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831
+ */
